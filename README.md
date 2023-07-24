@@ -1,3 +1,9 @@
+**To run the project, ensure that the right SDK settings are selected in the pom.xml file. You can either downgrade your SDK version, or upgrade from pom.xml. This is what I did it so it worked, instead of version 1.6 (default)  :**
+
+**<source>${sdk.version}</source>**
+
+**<target>${sdk.version}</target>**
+
 ![logo](logo.png)
 -
 :video_game: Game jam Java framework based on [libgdx](https://libgdx.badlogicgames.com/).
