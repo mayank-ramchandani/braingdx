@@ -202,42 +202,56 @@ public class GameWorld {
          Gdx.app.debug("DEBUG", "GameWorld - obtaining new object...");
       }
       final GameObject object = pool.obtain();
-      if (identityMap.containsKey(object.getId())) {
-         Gdx.app.error("FATAL", String.format(
-               "GameWorld - game object %s already exists. Unable to add new object %s",
-               object,
-               identityMap.get(object.getId())
-               )
-         );
-         return object;
-      }
+      GameObject object1 = getGameObject(object);
+      if (object1 != null) return object1;
       if (addObjectParameters.getMutator() != null) {
          addObjectParameters.getMutator().mutate(object);
       }
       identityMap.put(object.getId(), object);
       if (addObjectParameters.isLazy()) {
-         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
-            Gdx.app.debug("DEBUG", String.format("GameWorld - requested addition for new game object %s", object));
-         }
-         Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-               objects.addToGroup(addObjectParameters.getGroup(), object);
-               for (int i = 0; i < listeners.size; ++i) {
-                  listeners.get(i).onAdd(object);
-               }
-            }
-         });
+         extracted1(addObjectParameters, object);
       } else {
-         if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
-            Gdx.app.debug("DEBUG", String.format("GameWorld - added new game object %s", object));
-         }
-         objects.addToGroup(addObjectParameters.getGroup(), object);
-         for (int i = 0; i < listeners.size; ++i) {
-            listeners.get(i).onAdd(object);
-         }
+         extracted(addObjectParameters, object);
       }
       return object;
+   }
+
+   private GameObject getGameObject(GameObject object) {
+      if (identityMap.containsKey(object.getId())) {
+         Gdx.app.error("FATAL", String.format(
+               "GameWorld - game object %s already exists. Unable to add new object %s",
+                 object,
+               identityMap.get(object.getId())
+               )
+         );
+         return object;
+      }
+      return null;
+   }
+
+   private void extracted1(final addObjectParameters addObjectParameters, final GameObject object) {
+      if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
+         Gdx.app.debug("DEBUG", String.format("GameWorld - requested addition for new game object %s", object));
+      }
+      Gdx.app.postRunnable(new Runnable() {
+         @Override
+         public void run() {
+            objects.addToGroup(addObjectParameters.getGroup(), object);
+            for (int i = 0; i < listeners.size; ++i) {
+               listeners.get(i).onAdd(object);
+            }
+         }
+      });
+   }
+
+   private void extracted(addObjectParameters addObjectParameters, GameObject object) {
+      if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
+         Gdx.app.debug("DEBUG", String.format("GameWorld - added new game object %s", object));
+      }
+      objects.addToGroup(addObjectParameters.getGroup(), object);
+      for (int i = 0; i < listeners.size; ++i) {
+         listeners.get(i).onAdd(object);
+      }
    }
 
    /**

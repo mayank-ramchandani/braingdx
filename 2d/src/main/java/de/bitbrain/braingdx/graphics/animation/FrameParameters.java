@@ -13,16 +13,16 @@ public class FrameParameters {
     private final float offset;
     private final boolean randomOffset;
 
-    public FrameParameters(int originX, int originY, AnimationFrames.Direction direction, Animation.PlayMode playMode, int frames, float duration, int resetIndex, float offset, boolean randomOffset) {
-        this.originX = originX;
-        this.originY = originY;
-        this.direction = direction;
-        this.playMode = playMode;
+    public FrameParameters(OriginParameters originParameters, AnimationFrameParameters animationFrameParameters, int frames, float duration, int resetIndex, offsetParameters offsetParameters) {
+        this.originX = originParameters.getOriginX();
+        this.originY = originParameters.getOriginY();
+        this.direction = animationFrameParameters.getDirection();
+        this.playMode = animationFrameParameters.getPlayMode();
         this.frames = frames;
         this.duration = duration;
         this.resetIndex = resetIndex;
-        this.offset = offset;
-        this.randomOffset = randomOffset;
+        this.offset = offsetParameters.getOffset();
+        this.randomOffset = offsetParameters.isRandomOffset();
     }
 
     public int getOriginX() {

@@ -156,7 +156,7 @@ public class AnimationFrames {
 
       public AnimationFrames build() {
          return new AnimationFrames(
-                 new FrameParameters(originX, originY, direction, playMode, frames, duration, resetIndex, offset, randomOffset));
+                 new FrameParameters(new OriginParameters(originX, originY), new AnimationFrameParameters(direction, playMode), frames, duration, resetIndex, new offsetParameters(offset, randomOffset)));
       }
 
    }
