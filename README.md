@@ -1,4 +1,4 @@
-**To run the project, ensure that the right SDK settings are selected in the pom.xml file. You will most likely have to downgrade your SDK version, and upgrade from pom.xml. This is what I did it so it worked, instead of version 1.6 (default)  :**
+**To run the project, ensure that the right SDK settings are selected in the pom.xml file. You will most likely have to downgrade your SDK version, and upgrade from pom.xml. This is what I did it so it worked, instead of version 1.6 (default) in pom,xml :**
 
 **<source>${sdk.version}</source>**
 
