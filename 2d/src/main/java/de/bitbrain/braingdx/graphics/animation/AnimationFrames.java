@@ -18,16 +18,16 @@ public class AnimationFrames {
    private float offset;
    private boolean randomOffset;
 
-   private AnimationFrames(int originX, int originY, Direction direction, Animation.PlayMode playMode, int frames, float duration, int resetIndex, float offset, boolean randomOffset) {
-      this.originX = originX;
-      this.originY = originY;
-      this.direction = direction;
-      this.playMode = playMode;
-      this.frames = frames;
-      this.duration = duration;
-      this.resetIndex = resetIndex;
-      this.offset = offset;
-      this.randomOffset = randomOffset;
+   private AnimationFrames(FrameParameters frameParameters) {
+      this.originX = frameParameters.getOriginX();
+      this.originY = frameParameters.getOriginY();
+      this.direction = frameParameters.getDirection();
+      this.playMode = frameParameters.getPlayMode();
+      this.frames = frameParameters.getFrames();
+      this.duration = frameParameters.getDuration();
+      this.resetIndex = frameParameters.getResetIndex();
+      this.offset = frameParameters.getOffset();
+      this.randomOffset = frameParameters.isRandomOffset();
    }
 
    public float getOffset() {
@@ -156,16 +156,7 @@ public class AnimationFrames {
 
       public AnimationFrames build() {
          return new AnimationFrames(
-               originX,
-               originY,
-               direction,
-               playMode,
-               frames,
-               duration,
-               resetIndex,
-               offset,
-               randomOffset
-         );
+                 new FrameParameters(originX, originY, direction, playMode, frames, duration, resetIndex, offset, randomOffset));
       }
 
    }

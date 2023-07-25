@@ -151,7 +151,7 @@ public class GameWorld {
     * @return newly created game object
     */
    public GameObject addObject(Object group, boolean lazy) {
-      return addObject(group, null, lazy);
+      return addObject(new addObjectParameters(group, null, lazy));
    }
 
    /**
@@ -160,7 +160,7 @@ public class GameWorld {
     * @return newly created game object
     */
    public GameObject addObject(Mutator<GameObject> mutator, boolean lazy) {
-      return addObject(DEFAULT_GROUP_ID, mutator, lazy);
+      return addObject(new addObjectParameters(DEFAULT_GROUP_ID, mutator, lazy));
    }
 
    /**
@@ -179,7 +179,7 @@ public class GameWorld {
     * @return newly created game object
     */
    public GameObject addObject(Mutator<GameObject> mutator) {
-      return addObject(DEFAULT_GROUP_ID, mutator, false);
+      return addObject(new addObjectParameters(DEFAULT_GROUP_ID, mutator, false));
    }
 
    /**
@@ -189,16 +189,15 @@ public class GameWorld {
     * @return newly created game object
     */
    public GameObject addObject(Object group, Mutator<GameObject> mutator) {
-      return addObject(group, mutator, false);
+      return addObject(new addObjectParameters(group, mutator, false));
    }
 
    /**
     * Adds a new game object to the game world with a custom ID
     *
-    * @param mutator the mutator which might change the GameObject
-    * @return newly created game object
+    * @param addObjectParameters@return newly created game object
     */
-   public GameObject addObject(final Object group, Mutator<GameObject> mutator, boolean lazy) {
+   public GameObject addObject(final addObjectParameters addObjectParameters) {
       if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
          Gdx.app.debug("DEBUG", "GameWorld - obtaining new object...");
       }
@@ -212,18 +211,18 @@ public class GameWorld {
          );
          return object;
       }
-      if (mutator != null) {
-         mutator.mutate(object);
+      if (addObjectParameters.getMutator() != null) {
+         addObjectParameters.getMutator().mutate(object);
       }
       identityMap.put(object.getId(), object);
-      if (lazy) {
+      if (addObjectParameters.isLazy()) {
          if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
             Gdx.app.debug("DEBUG", String.format("GameWorld - requested addition for new game object %s", object));
          }
          Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-               objects.addToGroup(group, object);
+               objects.addToGroup(addObjectParameters.getGroup(), object);
                for (int i = 0; i < listeners.size; ++i) {
                   listeners.get(i).onAdd(object);
                }
@@ -233,7 +232,7 @@ public class GameWorld {
          if (Gdx.app.getLogLevel() == Application.LOG_DEBUG) {
             Gdx.app.debug("DEBUG", String.format("GameWorld - added new game object %s", object));
          }
-         objects.addToGroup(group, object);
+         objects.addToGroup(addObjectParameters.getGroup(), object);
          for (int i = 0; i < listeners.size; ++i) {
             listeners.get(i).onAdd(object);
          }
