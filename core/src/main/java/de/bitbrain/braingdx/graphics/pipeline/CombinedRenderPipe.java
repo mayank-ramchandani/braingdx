@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import de.bitbrain.braingdx.graphics.BatchResolver;
 import de.bitbrain.braingdx.graphics.postprocessing.PostProcessor;
 import de.bitbrain.braingdx.graphics.postprocessing.PostProcessorEffect;
-import de.bitbrain.braingdx.graphics.shader.BatchPostProcessor;
 import de.bitbrain.braingdx.util.Resizeable;
 
 import java.util.Map;
@@ -30,7 +29,7 @@ class CombinedRenderPipe implements RenderPipe, Resizeable {
 
    private final RenderLayer layer;
 
-   private final BatchPostProcessor batchPostProcessor;
+   private final PostProcessor batchPostProcessor;
    private final SpriteBatch batch;
    private boolean enabled = true;
 
@@ -39,7 +38,7 @@ class CombinedRenderPipe implements RenderPipe, Resizeable {
    public CombinedRenderPipe(RenderLayer layer, PostProcessor processor, SpriteBatch batch, Map<Class<?>, BatchResolver<?>> batchResolverMap,
                              PostProcessorEffect... effects) {
       this.layer = layer;
-      this.batchPostProcessor = new BatchPostProcessor(processor, effects);
+      this.batchPostProcessor = new PostProcessor(effects);
       this.batch = batch;
       this.batchResolverMap = batchResolverMap;
    }

@@ -28,6 +28,9 @@ import com.badlogic.gdx.utils.Disposable;
 import de.bitbrain.braingdx.graphics.postprocessing.utils.PingPongBuffer;
 import de.bitbrain.braingdx.util.ItemsManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Provides a way to capture the rendered scene to an off-screen buffer and to apply a chain of
  * effects on it before rendering to screen.
@@ -47,7 +50,7 @@ public class PostProcessor implements Disposable {
    private static Format fbFormat;
    private static Rectangle viewport = new Rectangle();
    private static boolean hasViewport = false;
-   private final PingPongBuffer composite;
+   private PingPongBuffer composite;
    private final ItemsManager<PostProcessorEffect> effectsManager = new ItemsManager<PostProcessorEffect>();
    private final Color clearColor = Color.CLEAR;
    private TextureWrap compositeWrapU;
@@ -58,6 +61,8 @@ public class PostProcessor implements Disposable {
    private boolean capturing = false;
    private boolean hasCaptured = false;
    private boolean useDepth = false;
+
+   private List<PostProcessorEffect> effects;
 
    private PostProcessorListener listener = null;
 
@@ -97,6 +102,57 @@ public class PostProcessor implements Disposable {
                         TextureWrap v) {
       this((int) viewport.width, (int) viewport.height, useDepth, useAlphaChannel, use32Bits, u, v);
       setViewport(viewport);
+   }
+
+   public PostProcessor(PostProcessorEffect... effects){
+      this.effects = new ArrayList<PostProcessorEffect>();
+      addEffects(effects);
+   }
+
+   public void addEffects(PostProcessorEffect... effects) {
+      for (PostProcessorEffect effect : effects) {
+         this.effects.add(effect);
+         this.addEffect(effect);
+         effect.setEnabled(false);
+      }
+   }
+
+   public void begin() {
+      setEffectsEnabled(true);
+      this.setClearColor(0f, 0f, 0f, 0f);
+      this.setClearBits(GL20.GL_COLOR_BUFFER_BIT);
+      this.capture();
+   }
+
+   public void end(FrameBuffer buffer) {
+      this.render(buffer);
+      setEffectsEnabled(false);
+   }
+
+   public boolean hasEffects() {
+      return !effects.isEmpty();
+   }
+
+   public void end() {
+      this.render();
+      setEffectsEnabled(false);
+   }
+
+   public void resume() {
+      this.rebind();
+   }
+
+   private void setEffectsEnabled(boolean enabled) {
+      for (PostProcessorEffect effect : effects) {
+         effect.setEnabled(enabled);
+      }
+   }
+
+   public void clear() {
+      for (PostProcessorEffect effect : effects) {
+         effect.dispose();
+      }
+      effects.clear();
    }
 
    /**
@@ -479,5 +535,7 @@ public class PostProcessor implements Disposable {
 
       return enabledEffects.size;
    }
+
+
 
 }

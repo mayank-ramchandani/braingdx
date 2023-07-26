@@ -32,7 +32,7 @@ public class AnimationRenderer extends GameObject2DRenderer {
       }
    };
 
-   private static final AnimationTypeResolver<GameObject> DEFAULT_ANIMATION_TYPE_RESOLVER = new AnimationTypeResolver<GameObject>() {
+   private static final AnimationTypeResolver<GameObject> RESOLVER = new AnimationTypeResolver<GameObject>() {
       @Override
       public Object getAnimationType(GameObject object) {
          return object.getType();
@@ -61,11 +61,11 @@ public class AnimationRenderer extends GameObject2DRenderer {
    private boolean enabled = true;
 
    public AnimationRenderer(AnimationSpriteSheet spriteSheet, AnimationConfig config, Enabler<GameObject> animationEnabler) {
-      this(spriteSheet, config, DEFAULT_ANIMATION_TYPE_RESOLVER, animationEnabler);
+      this(spriteSheet, config, RESOLVER, animationEnabler);
    }
 
    public AnimationRenderer(AnimationSpriteSheet spriteSheet, AnimationConfig config) {
-      this(spriteSheet, config, DEFAULT_ANIMATION_TYPE_RESOLVER, DEFAULT_ENABLER);
+      this(spriteSheet, config, RESOLVER, DEFAULT_ENABLER);
    }
 
    public AnimationRenderer(AnimationSpriteSheet spriteSheet, AnimationConfig config, AnimationTypeResolver<GameObject> animationTypeResolver) {

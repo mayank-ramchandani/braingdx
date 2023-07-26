@@ -89,29 +89,6 @@ public class ScreenTransitions {
       out(defaultTransition, callback, null, duration);
    }
 
-   public void outIn(Transitionable transition, TransitionCallback callback, float duration) {
-      if (transition instanceof RenderLayer2D) {
-         renderPipeline.put(ScreenTransitions.class.getSimpleName(), (RenderLayer2D)transition);
-      }
-      defaultTransition.outIn(callback, duration);
-   }
-
-   public void outIn(TransitionCallback callback, float duration) {
-      outIn(defaultTransition, callback, duration);
-   }
-
-   public void outIn(Transitionable transition, float duration) {
-      outIn(transition, null, duration);
-   }
-
-   public void outIn(float duration) {
-      outIn(defaultTransition, null, duration);
-   }
-
-   public void outIn() {
-      outIn(defaultTransition, null, Transitionable.DEFAULT_DURATION);
-   }
-
    public void out(Transitionable transition, final AbstractScreen<?, ?> to, float duration) {
       out(transition, null, to, duration);
    }
